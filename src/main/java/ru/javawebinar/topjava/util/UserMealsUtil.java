@@ -66,16 +66,13 @@ public class UserMealsUtil {
                                                         .sum()))),
                         localDateIntegerMap -> localDateIntegerMap.entrySet()
                                 .stream()
-                                .flatMap(localDateSimpleEntryEntry -> {
-                                    final AbstractMap.SimpleEntry<List<UserMeal>, Integer> value = localDateSimpleEntryEntry.getValue();
-                                    return value.getKey()
-                                            .stream()
-                                            .filter(userMeal -> TimeUtil.isBetweenHalfOpen(
-                                                    userMeal.getDateTime().toLocalTime(), startTime, endTime))
-                                            .map(userMeal -> new UserMealWithExcess(userMeal.getDateTime(),
-                                                    userMeal.getDescription(), userMeal.getCalories(),
-                                                    value.getValue() > caloriesPerDay));
-                                })
+                                .flatMap(localDateSimpleEntryEntry -> localDateSimpleEntryEntry.getValue().getKey()
+                                        .stream()
+                                        .filter(userMeal -> TimeUtil.isBetweenHalfOpen(
+                                                userMeal.getDateTime().toLocalTime(), startTime, endTime))
+                                        .map(userMeal -> new UserMealWithExcess(userMeal.getDateTime(),
+                                                userMeal.getDescription(), userMeal.getCalories(),
+                                                localDateSimpleEntryEntry.getValue().getValue() > caloriesPerDay)))
                                 .collect(Collectors.toList())
                 ));
     }
