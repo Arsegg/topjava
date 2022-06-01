@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class UserMeal {
     private final LocalDateTime dateTime;
@@ -15,15 +17,33 @@ public class UserMeal {
         this.calories = calories;
     }
 
-    public LocalDateTime getDateTime() {
+    LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public String getDescription() {
-        return description;
+    LocalDate getLocalDate() {
+        return getDateTime().toLocalDate();
     }
 
-    public int getCalories() {
+    LocalTime getLocalTime() {
+        return getDateTime().toLocalTime();
+    }
+
+    int getCalories() {
         return calories;
+    }
+
+    boolean isBetweenHalfOpen(LocalTime startTime, LocalTime endTime) {
+        final LocalTime lt = getLocalTime();
+        return lt.compareTo(startTime) >= 0 && lt.compareTo(endTime) < 0;
+    }
+
+    @Override
+    public String toString() {
+        return "UserMeal{" +
+                "dateTime=" + dateTime +
+                ", description='" + description + '\'' +
+                ", calories=" + calories +
+                '}';
     }
 }
