@@ -10,8 +10,9 @@ import java.util.stream.Collectors;
 
 public class UserMealAggregate {
     private final Map<LocalDate, Entry<List<UserMeal>, Integer>> userMealPerDay;
+    private final int caloriesPerDay;
 
-    public UserMealAggregate(List<UserMeal> userMealList) {
+    public UserMealAggregate(List<UserMeal> userMealList, int caloriesPerDay) {
         userMealPerDay = userMealList.stream()
                 .collect(Collectors.groupingBy(UserMeal::getLocalDate,
                         Collectors.collectingAndThen(Collectors.toList(),
@@ -19,6 +20,7 @@ public class UserMealAggregate {
                                         userMeals.stream()
                                                 .mapToInt(UserMeal::getCalories)
                                                 .sum()))));
+        this.caloriesPerDay = caloriesPerDay;
     }
 
     public List<UserMeal> filteredByStreams(LocalTime startTime, LocalTime endTime) {
@@ -30,7 +32,7 @@ public class UserMealAggregate {
                 .collect(Collectors.toList());
     }
 
-    public boolean isExceeded(UserMeal userMeal, int caloriesPerDay) {
+    public boolean isExceeded(UserMeal userMeal) {
         return userMealPerDay.get(userMeal.getLocalDate()).getValue() > caloriesPerDay;
     }
 }

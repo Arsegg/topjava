@@ -21,10 +21,10 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2_020, Month.JANUARY, 31, 13, 0), "Обед", 500),
                 new UserMeal(LocalDateTime.of(2_020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
         );
-        final UserMealAggregate mealAggregate = new UserMealAggregate(meals);
+        final UserMealAggregate mealAggregate = new UserMealAggregate(meals, 2_000);
         final List<UserMeal> userMeals = mealAggregate.filteredByStreams(LocalTime.of(7, 0), LocalTime.of(12, 0));
         userMeals.stream()
-                .map(userMeal -> new SimpleEntry<>(userMeal, mealAggregate.isExceeded(userMeal, 2_000)))
+                .map(userMeal -> new SimpleEntry<>(userMeal, mealAggregate.isExceeded(userMeal)))
                 .forEach(System.out::println);
     }
 }
