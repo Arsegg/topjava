@@ -6,7 +6,6 @@ import ru.javawebinar.topjava.model.UserMealAggregate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,8 +22,6 @@ public class UserMealsUtil {
         );
         final UserMealAggregate mealAggregate = new UserMealAggregate(meals, 2_000);
         final List<UserMeal> userMeals = mealAggregate.filteredByStreams(LocalTime.of(7, 0), LocalTime.of(12, 0));
-        userMeals.stream()
-                .map(userMeal -> new SimpleEntry<>(userMeal, mealAggregate.isExceeded(userMeal)))
-                .forEach(System.out::println);
+        userMeals.forEach(System.out::println);
     }
 }

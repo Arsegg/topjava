@@ -29,10 +29,11 @@ public class UserMealAggregate {
                 .flatMap(localDateSimpleEntryEntry -> localDateSimpleEntryEntry.getValue().getKey()
                         .stream()
                         .filter(userMeal -> userMeal.isBetweenHalfOpen(startTime, endTime)))
+                .map(userMeal -> new UserMeal(userMeal, isExceeded(userMeal)))
                 .collect(Collectors.toList());
     }
 
-    public boolean isExceeded(UserMeal userMeal) {
+    private boolean isExceeded(UserMeal userMeal) {
         return userMealPerDay.get(userMeal.getLocalDate()).getValue() > caloriesPerDay;
     }
 }

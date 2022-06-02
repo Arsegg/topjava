@@ -11,10 +11,21 @@ public class UserMeal {
 
     private final int calories;
 
-    public UserMeal(LocalDateTime dateTime, String description, int calories) {
+    private final transient Boolean isExceeded;
+
+    UserMeal(LocalDateTime dateTime, String description, int calories, Boolean isExceeded) {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+        this.isExceeded = isExceeded;
+    }
+
+    public UserMeal(LocalDateTime dateTime, String description, int calories) {
+        this(dateTime, description, calories, null);
+    }
+
+    UserMeal(UserMeal userMeal, Boolean isExceeded) {
+        this(userMeal.dateTime, userMeal.description, userMeal.calories, isExceeded);
     }
 
     LocalDateTime getDateTime() {
@@ -44,6 +55,7 @@ public class UserMeal {
                 "dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
+                ", isExceeded=" + isExceeded +
                 '}';
     }
 }
