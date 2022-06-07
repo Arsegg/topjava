@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html lang="ru">
 <head>
@@ -7,5 +8,29 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
+<table>
+    <tr>
+        <th>DateTime</th>
+        <th>Description</th>
+        <th>Calories</th>
+    </tr>
+    <c:forEach items="${requestScope.meals}" var="meal">
+        <c:set value="green" var="color"/>
+        <c:if test="${meal.excess}">
+            <c:set value="red" var="color"/>
+        </c:if>
+        <tr style="color:${color}">
+            <td>
+                ${meal.dateTime}
+            </td>
+            <td>
+                ${meal.description}
+            </td>
+            <td>
+                ${meal.calories}
+            </td>
+        </tr>
+    </c:forEach>
+</table>
 </body>
 </html>
