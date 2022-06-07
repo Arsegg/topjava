@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.*;
-import java.util.Collections;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -34,11 +36,15 @@ public class MealServlet extends HttpServlet {
 
         log.debug("Generating mealTos...");
         final AtomicInteger atomicInteger = new AtomicInteger();
-        MEAL_TOS = Stream.generate(() -> new Meal(LocalDateTime.of(LocalDate.of(2_020, Month.JUNE, 30), LocalTime.MIDNIGHT).plusMinutes(random.nextLong(TimeUnit.DAYS.toMinutes(7))),
+        MEAL_TOS = Stream.generate(() -> new Meal(LocalDateTime.of(LocalDate.of(2_020, Month.JUNE, 30),
+                        LocalTime.MIDNIGHT).plusMinutes(random.nextLong(TimeUnit.DAYS.toMinutes(7))),
                         "Description #" + atomicInteger.incrementAndGet(),
                         random.nextInt(CALORIES_PER_DAY / 3, CALORIES_PER_DAY / 2)))
                 .limit(7 * 3)
-                .collect(Collectors.collectingAndThen(Collectors.toList(), meals -> MealsUtil.filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY)));
+                .collect(Collectors.collectingAndThen(Collectors.toList(), meals -> MealsUtil.filteredByStreams(meals,
+                        LocalTime.MIN,
+                        LocalTime.MAX,
+                        CALORIES_PER_DAY)));
         log.debug("MealTos is generated.");
     }
 
