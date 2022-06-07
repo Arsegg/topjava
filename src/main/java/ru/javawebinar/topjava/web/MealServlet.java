@@ -1,7 +1,9 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,11 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,19 +24,21 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
+    private static final int CALORIES_PER_DAY = 2_000;
     private static final List<MealTo> MEAL_TOS;
+
     static {
         log.debug("Setting seed...");
         final ThreadLocalRandom random = ThreadLocalRandom.current();
         log.debug("Seed is set.");
 
         log.debug("Generating mealTos...");
-        MEAL_TOS = Stream.generate(() -> new MealTo(LocalDateTime.ofEpochSecond(random.nextInt(), random.nextInt(1_000_000_000), ZoneOffset.UTC),
-                        "Description #" + random.nextInt(1, Integer.MAX_VALUE),
-                        random.nextInt(0, Integer.MAX_VALUE),
-                        random.nextBoolean()))
-                .limit(1_000)
-                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+        final AtomicInteger atomicInteger = new AtomicInteger();
+        MEAL_TOS = Stream.generate(() -> new Meal(LocalDateTime.of(LocalDate.of(2_020, Month.JUNE, 30), LocalTime.MIDNIGHT).plusMinutes(random.nextLong(TimeUnit.DAYS.toMinutes(7))),
+                        "Description #" + atomicInteger.incrementAndGet(),
+                        random.nextInt(CALORIES_PER_DAY / 3, CALORIES_PER_DAY / 2)))
+                .limit(7 * 3)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), meals -> MealsUtil.filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY)));
         log.debug("MealTos is generated.");
     }
 
