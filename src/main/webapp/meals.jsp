@@ -16,11 +16,7 @@
         <th>Calories</th>
     </tr>
     <c:forEach items="${requestScope.meals}" var="meal">
-        <c:set value="green" var="color"/>
-        <c:if test="${meal.excess}">
-            <c:set value="red" var="color"/>
-        </c:if>
-        <tr style="color:${color}">
+        <tr style="color:${meal.excess ? "red" : "green"}">
             <td>
                 ${meal.dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"))}
             </td>
