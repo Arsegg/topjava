@@ -1,6 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page contentType="text/html;charset=UTF-8"
-         import="java.time.format.DateTimeFormatter" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html lang="ru">
 <head>
     <title>Meals</title>
@@ -18,7 +17,7 @@
     <c:forEach items="${requestScope.meals}" var="meal">
         <tr style="color:${meal.excess ? "red" : "green"}">
             <td>
-                ${meal.dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"))}
+                ${meal.dateTime.format(requestScope.dateTimeFormatter)}
             </td>
             <td>
                 ${meal.description}

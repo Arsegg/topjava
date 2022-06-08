@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +29,7 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
     private static final int CALORIES_PER_DAY = 2_000;
     private static final List<MealTo> MEAL_TOS;
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
 
     static {
         log.debug("Setting seed...");
@@ -50,9 +52,10 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        log.debug("Setting meals attribute...");
+        log.debug("Setting attributes...");
+        request.setAttribute("dateTimeFormatter", DATE_TIME_FORMATTER);
         request.setAttribute("meals", MEAL_TOS);
-        log.debug("Meals attribute is set.");
+        log.debug("Attributes are set.");
 
         log.debug("Forwarding to meals...");
         final RequestDispatcher meals = request.getRequestDispatcher("meals.jsp");
