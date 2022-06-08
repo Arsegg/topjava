@@ -28,27 +28,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
     private static final int CALORIES_PER_DAY = 2_000;
-    private static final List<MealTo> MEAL_TOS;
+    private static final List<MealTo> MEAL_TOS = MealsUtil.filteredByStreams(MealsUtil.MEALS,
+            LocalTime.MIN,
+            LocalTime.MAX,
+            CALORIES_PER_DAY);
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
-
-    static {
-        log.debug("Setting seed...");
-        final ThreadLocalRandom random = ThreadLocalRandom.current();
-        log.debug("Seed is set.");
-
-        log.debug("Generating mealTos...");
-        final AtomicInteger atomicInteger = new AtomicInteger();
-        MEAL_TOS = Stream.generate(() -> new Meal(LocalDateTime.of(LocalDate.of(2_020, Month.JUNE, 30),
-                        LocalTime.MIDNIGHT).plusMinutes(random.nextLong(TimeUnit.DAYS.toMinutes(7))),
-                        "Description #" + atomicInteger.incrementAndGet(),
-                        random.nextInt(CALORIES_PER_DAY / 3, CALORIES_PER_DAY / 2)))
-                .limit(7 * 3)
-                .collect(Collectors.collectingAndThen(Collectors.toList(), meals -> MealsUtil.filteredByStreams(meals,
-                        LocalTime.MIN,
-                        LocalTime.MAX,
-                        CALORIES_PER_DAY)));
-        log.debug("MealTos is generated.");
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
